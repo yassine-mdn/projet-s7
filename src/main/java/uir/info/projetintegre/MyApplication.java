@@ -1,16 +1,27 @@
 package uir.info.projetintegre;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.web.filter.CorsFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import uir.info.projetintegre.model.Etudiant;
+import uir.info.projetintegre.model.Professeur;
+import uir.info.projetintegre.model.Programme;
+import uir.info.projetintegre.model.ResponssableDeStage;
+import uir.info.projetintegre.repository.EtudiantRepository;
+import uir.info.projetintegre.repository.ProfesseurRepository;
+import uir.info.projetintegre.repository.ProgrammeRepository;
+import uir.info.projetintegre.repository.ResponssableDeStageRepository;
 
 import java.util.Arrays;
+import java.util.Set;
 
 @SpringBootApplication
-public class MyApplication {
+public class MyApplication{
 
     public static void main(String[] args) {
         SpringApplication.run(MyApplication.class, args);
