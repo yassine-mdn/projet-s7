@@ -1,10 +1,8 @@
 package uir.info.projetintegre.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -16,9 +14,11 @@ import java.util.Set;
 public class ResponssableDeStage extends Compte{
 
     @OneToMany(mappedBy = "responssableDeStage")
+    @JsonIgnore
     private Set<Reunion> reunions;
 
     @OneToMany(mappedBy = "superviseur")
+    @JsonIgnore
     private Set<Etudiant> etudiantsSuperviser;
 
 }

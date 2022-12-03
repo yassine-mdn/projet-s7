@@ -1,10 +1,8 @@
 package uir.info.projetintegre.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -15,7 +13,10 @@ import java.util.Set;
 @Entity
 public class Etudiant extends Compte{
 
+    private Integer niveauEtude;
+
     @ManyToMany
+    @JsonIgnore
     @JoinTable(
             name = "participe",
             joinColumns = @JoinColumn(name = "id_etudiant"),
@@ -24,14 +25,18 @@ public class Etudiant extends Compte{
     private Set<Reunion> reunions;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_encadrant",nullable = false)
     private Professeur professeur;
 
     @ManyToOne
-    @JoinColumn(name = "id_niveau_etude",nullable = false)
-    private NiveauEtude niveauEtude;
+    @JsonIgnore
+    @JoinColumn(name = "id_programme",nullable = false)
+    private Programme programme;
+
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_superviseur",nullable = false)
     private ResponssableDeStage superviseur;
 

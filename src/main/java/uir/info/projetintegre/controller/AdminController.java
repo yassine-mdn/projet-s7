@@ -33,12 +33,12 @@ public class AdminController {
         return adminRepository.findAll();
     }
 
-    @GetMapping("{admin_id}")
-    public Admin getOneAdmin(@PathVariable("admin_id") Integer id){
+    @GetMapping("id={admin_id}")
+    public Admin getAdminById(@PathVariable("admin_id") Integer id){
         return adminRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
     }
 
-    @PutMapping("{admin_id}")
+    @PutMapping("id={admin_id}")
     public void updateAdmin(@PathVariable("admin_id") Integer id, @RequestBody NewAdminRequest request) {
         adminRepository.findById(id)
                 .map(admin -> {
@@ -52,7 +52,7 @@ public class AdminController {
         //TODO:Add case of recieving an invalid id
     }
 
-    @DeleteMapping("{admin_id}")
+    @DeleteMapping("id={admin_id}")
     public void deleteAdmin(@PathVariable("admin_id") Integer id){
         adminRepository.deleteById(id);
     }

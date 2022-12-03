@@ -1,10 +1,8 @@
 package uir.info.projetintegre.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Set;
 
@@ -28,13 +26,19 @@ public class Programme {
     )
     private Integer idProgramme;
 
-   private String nom;
-   private String description;
+    private String nom;
+    private String description;
 
-   @OneToMany(mappedBy = "programme")
-   private Set<NiveauEtude> niveauEtudes;
+    @OneToMany(mappedBy = "programme")
+    @JsonIgnore
+    private Set<Etudiant> etudiants;
+
+    @OneToOne(mappedBy = "programme")
+    @JsonIgnore
+    private Professeur professeur;
+
 
     @ManyToOne
-    @JoinColumn(name="id_etablissement", nullable=false)
+    @JoinColumn(name = "id_etablissement", nullable = false)
     private Etablissement etablissement;
 }

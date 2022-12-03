@@ -1,5 +1,7 @@
 package uir.info.projetintegre.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -30,14 +32,17 @@ public class Reunion {
     private Integer idR;
 
     private Date date;
-    private String sujet;
+    private String titre;
+    private String description;
     private Integer durreeEnMin;
 
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn(name = "id_responssable",nullable = false)
     private ResponssableDeStage responssableDeStage;
 
     @ManyToMany(mappedBy = "reunions")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Etudiant> etudiants;
 
 }
