@@ -21,4 +21,8 @@ public class ResponssableDeStage extends Compte{
     @JsonIgnore
     private Set<Etudiant> etudiantsSuperviser;
 
+    @OneToOne(mappedBy = "rsd")
+    @JsonIgnore
+    private JoinTableCompte joinTableCompte;
+
 }

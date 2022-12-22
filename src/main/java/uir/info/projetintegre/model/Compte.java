@@ -7,6 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -30,6 +33,4 @@ public class Compte {
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passWord;
-
-
 }

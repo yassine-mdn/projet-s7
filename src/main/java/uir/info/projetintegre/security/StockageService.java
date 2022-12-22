@@ -3,6 +3,7 @@ package uir.info.projetintegre.security;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.model.Fichier;
+import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.repository.FichierRepository;
 
 import java.io.File;
@@ -22,7 +23,7 @@ public class StockageService {
 
     private final String CHEMIN_REPERTOIRE ="C:/Users/yassi/Desktop/test-file-transfer/";
 
-    public String uploadFichier(MultipartFile file) throws IOException {
+    public String uploadFichier(MultipartFile file, JoinTableCompte sender,JoinTableCompte receiver) throws IOException {
         String cheminComplet= CHEMIN_REPERTOIRE +file.getOriginalFilename();
 
         long millis = System.currentTimeMillis();
@@ -33,7 +34,10 @@ public class StockageService {
                     .nom(file.getOriginalFilename())
                     .type(file.getContentType())
                     .dateUpload(new Date(millis))
-                    .cheminFichier(cheminComplet).build());
+                    .cheminFichier(cheminComplet)
+                    .sender(sender)
+                    .receiver(receiver).build());
+
 
 
             file.transferTo(new File(cheminComplet));

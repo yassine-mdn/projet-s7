@@ -1,10 +1,11 @@
 package uir.info.projetintegre.controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.Admin;
+import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.repository.AdminRepository;
+import uir.info.projetintegre.repository.JoinTableCompteRepository;
 
 import java.util.List;
 
@@ -13,9 +14,11 @@ import java.util.List;
 public class AdminController {
 
     private final AdminRepository adminRepository;
+    private final JoinTableCompteRepository joinTableCompteRepository;
 
-    public AdminController(AdminRepository adminRepository) {
+    public AdminController(AdminRepository adminRepository, JoinTableCompteRepository joinTableCompteRepository) {
         this.adminRepository = adminRepository;
+        this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
     @PostMapping
@@ -26,6 +29,7 @@ public class AdminController {
         admin.setEmail(request.email());
         admin.setPassWord(request.passWord());
         adminRepository.save(admin);
+        joinTableCompteRepository.save(JoinTableCompte.builder().admin(admin).build());
     }
 
     @GetMapping
@@ -54,7 +58,9 @@ public class AdminController {
 
     @DeleteMapping("id={admin_id}")
     public void deleteAdmin(@PathVariable("admin_id") Integer id){
+
         adminRepository.deleteById(id);
+        joinTableCompteRepository.deleteById(id);
     }
 
 

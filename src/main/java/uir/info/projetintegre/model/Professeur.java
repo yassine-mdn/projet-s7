@@ -20,4 +20,9 @@ public class Professeur extends Compte{
     @OneToOne
     @JoinColumn(name = "id_prog",referencedColumnName = "idProgramme")
     private Programme programme;
+
+    @OneToOne(mappedBy = "professeur")
+    @JsonIgnore
+    private JoinTableCompte joinTableCompte;
+
 }

@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.*;
 import uir.info.projetintegre.repository.EtudiantRepository;
+import uir.info.projetintegre.repository.JoinTableCompteRepository;
 import uir.info.projetintegre.repository.ProfesseurRepository;
 import uir.info.projetintegre.repository.ResponssableDeStageRepository;
 
@@ -16,18 +17,18 @@ import java.util.List;
 public class EtudiantController {
 
     private final EtudiantRepository etudiantRepository;
-
     private final ProfesseurRepository professeurRepository;
-
     private final ResponssableDeStageRepository responssableDeStageRepository;
+    private final JoinTableCompteRepository joinTableCompteRepository;
 
 
     public EtudiantController(EtudiantRepository etudiantRepository,
                               ProfesseurRepository professeurRepository,
-                              ResponssableDeStageRepository responssableDeStageRepository) {
+                              ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository) {
         this.etudiantRepository = etudiantRepository;
         this.professeurRepository = professeurRepository;
         this.responssableDeStageRepository = responssableDeStageRepository;
+        this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
     @PostMapping
@@ -39,6 +40,7 @@ public class EtudiantController {
         etudiant.setPassWord(request.passWord());
         etudiant.setNiveauEtude(request.niveauEtude());
         etudiantRepository.save(etudiant);
+        joinTableCompteRepository.save(JoinTableCompte.builder().etudiant(etudiant).build());
     }
 
 
@@ -116,6 +118,7 @@ public class EtudiantController {
     @DeleteMapping("id={etudiant_id}")
     public void deleteEtudiant(@PathVariable("etudiant_id") Integer id) {
         etudiantRepository.deleteById(id);
+        joinTableCompteRepository.deleteById(id);
     }
 
     record NewEtudiantRequest(

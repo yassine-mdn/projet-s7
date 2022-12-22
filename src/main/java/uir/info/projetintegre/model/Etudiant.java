@@ -40,5 +40,9 @@ public class Etudiant extends Compte{
     @JoinColumn(name = "id_superviseur",nullable = false)
     private ResponssableDeStage superviseur;
 
+    @OneToOne(mappedBy = "etudiant")
+    @JsonIgnore
+    private JoinTableCompte joinTableCompte;
+
     //TODO: Nzid l blan mta3 date debut stage & durrée
 }

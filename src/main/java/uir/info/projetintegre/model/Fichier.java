@@ -33,6 +33,14 @@ public class Fichier {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String cheminFichier;
 
+    @ManyToOne
+    @JoinColumn(name = "sender_id",nullable = false)
+    private JoinTableCompte sender;
+
+    @ManyToOne
+    @JoinColumn(name = "receiver_id",nullable = false)
+    private JoinTableCompte receiver;
+
     //TODO: Link each file to the uploader via the "compte" entity
 
 

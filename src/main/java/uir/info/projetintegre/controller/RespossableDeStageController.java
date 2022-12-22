@@ -3,9 +3,10 @@ package uir.info.projetintegre.controller;
 import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
-import uir.info.projetintegre.model.Professeur;
+import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.model.ResponssableDeStage;
 import uir.info.projetintegre.model.Reunion;
+import uir.info.projetintegre.repository.JoinTableCompteRepository;
 import uir.info.projetintegre.repository.ResponssableDeStageRepository;
 
 import java.util.ArrayList;
@@ -18,9 +19,11 @@ import java.util.Set;
 public class RespossableDeStageController {
 
     private final ResponssableDeStageRepository responssableDeStageRepository;
+    private final JoinTableCompteRepository joinTableCompteRepository;
 
-    public RespossableDeStageController(ResponssableDeStageRepository responssableDeStageRepository) {
+    public RespossableDeStageController(ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository) {
         this.responssableDeStageRepository = responssableDeStageRepository;
+        this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
     @PostMapping
@@ -33,6 +36,7 @@ public class RespossableDeStageController {
         responssableDeStage.setReunions(request.reunions());
         responssableDeStage.setEtudiantsSuperviser(request.etudiantsSuperviser());
         responssableDeStageRepository.save(responssableDeStage);
+        joinTableCompteRepository.save(JoinTableCompte.builder().rsd(responssableDeStage).build());
     }
 
     @GetMapping
@@ -78,6 +82,7 @@ public class RespossableDeStageController {
     @DeleteMapping("id={resp_id}")
     public void deleteResponssableDeStage(@PathVariable("resp_id") Integer id){
         responssableDeStageRepository.deleteById(id);
+        joinTableCompteRepository.deleteById(id);
     }
 
     record NewResponssableRequest(

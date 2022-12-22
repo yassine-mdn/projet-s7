@@ -1,11 +1,19 @@
 package uir.info.projetintegre.controller;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
+import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.model.Professeur;
+import uir.info.projetintegre.repository.FichierRepository;
+import uir.info.projetintegre.repository.JoinTableCompteRepository;
 import uir.info.projetintegre.repository.ProfesseurRepository;
+import uir.info.projetintegre.security.StockageService;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,9 +23,12 @@ import java.util.Set;
 public class ProfesseurController {
 
     private final ProfesseurRepository professeurRepository;
+    private final JoinTableCompteRepository joinTableCompteRepository;
 
-    public ProfesseurController(ProfesseurRepository professeurRepository) {
+
+    public ProfesseurController(ProfesseurRepository professeurRepository, JoinTableCompteRepository joinTableCompteRepository) {
         this.professeurRepository = professeurRepository;
+        this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
 
@@ -30,7 +41,9 @@ public class ProfesseurController {
         professeur.setPassWord(request.passWord());
         professeur.setEtudiants(request.etudiants());
         professeurRepository.save(professeur);
+        joinTableCompteRepository.save(JoinTableCompte.builder().professeur(professeur).build());
     }
+
 
     @GetMapping
     public List<Professeur> getAllProfesseurs() {
@@ -66,6 +79,7 @@ public class ProfesseurController {
     @DeleteMapping("id={prof_id}")
     public void deleteProfesseur(@PathVariable("prof_id") Integer id){
         professeurRepository.deleteById(id);
+        joinTableCompteRepository.deleteById(id);
     }
 
     record NewProfesseurRequest(
