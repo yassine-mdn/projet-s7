@@ -21,7 +21,7 @@ public class Professeur extends Compte{
     @JoinColumn(name = "id_prog",referencedColumnName = "idProgramme")
     private Programme programme;
 
-    @OneToOne(mappedBy = "professeur")
+    @OneToOne(mappedBy = "professeur",cascade = CascadeType.ALL)
     @JsonIgnore
     private JoinTableCompte joinTableCompte;
 

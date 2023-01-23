@@ -25,7 +25,6 @@ public class Etudiant extends Compte{
     private Set<Reunion> reunions;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_encadrant",nullable = false)
     private Professeur professeur;
 
@@ -36,11 +35,10 @@ public class Etudiant extends Compte{
 
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_superviseur",nullable = false)
     private ResponssableDeStage superviseur;
 
-    @OneToOne(mappedBy = "etudiant")
+    @OneToOne(mappedBy = "etudiant",cascade = CascadeType.ALL)
     @JsonIgnore
     private JoinTableCompte joinTableCompte;
 

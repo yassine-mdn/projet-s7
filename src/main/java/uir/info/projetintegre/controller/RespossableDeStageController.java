@@ -82,7 +82,6 @@ public class RespossableDeStageController {
     @DeleteMapping("id={resp_id}")
     public void deleteResponssableDeStage(@PathVariable("resp_id") Integer id){
         responssableDeStageRepository.deleteById(id);
-        joinTableCompteRepository.deleteById(id);
     }
 
     record NewResponssableRequest(

@@ -79,7 +79,6 @@ public class ProfesseurController {
     @DeleteMapping("id={prof_id}")
     public void deleteProfesseur(@PathVariable("prof_id") Integer id){
         professeurRepository.deleteById(id);
-        joinTableCompteRepository.deleteById(id);
     }
 
     record NewProfesseurRequest(

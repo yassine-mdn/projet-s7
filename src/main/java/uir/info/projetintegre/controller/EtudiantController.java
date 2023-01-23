@@ -118,7 +118,6 @@ public class EtudiantController {
     @DeleteMapping("id={etudiant_id}")
     public void deleteEtudiant(@PathVariable("etudiant_id") Integer id) {
         etudiantRepository.deleteById(id);
-        joinTableCompteRepository.deleteById(id);
     }
 
     record NewEtudiantRequest(

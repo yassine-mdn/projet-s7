@@ -39,6 +39,7 @@ public class Programme {
 
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_etablissement", nullable = false)
     private Etablissement etablissement;
 }

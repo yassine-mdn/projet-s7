@@ -60,7 +60,6 @@ public class AdminController {
     public void deleteAdmin(@PathVariable("admin_id") Integer id){
 
         adminRepository.deleteById(id);
-        joinTableCompteRepository.deleteById(id);
     }
 
 
