@@ -25,17 +25,16 @@ public class Etudiant extends Compte{
     private Set<Reunion> reunions;
 
     @ManyToOne
-    @JoinColumn(name = "id_encadrant",nullable = false)
+    @JoinColumn(name = "id_encadrant")
     private Professeur professeur;
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "id_programme",nullable = false)
     private Programme programme;
 
 
     @ManyToOne
-    @JoinColumn(name = "id_superviseur",nullable = false)
+    @JoinColumn(name = "id_superviseur")
     private ResponssableDeStage superviseur;
 
     @OneToOne(mappedBy = "etudiant",cascade = CascadeType.ALL)

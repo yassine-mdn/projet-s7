@@ -29,13 +29,13 @@ public class Programme {
     private String nom;
     private String description;
 
-    @OneToMany(mappedBy = "programme")
+    @OneToMany(mappedBy = "programme",cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Etudiant> etudiants;
 
-    @OneToOne(mappedBy = "programme")
+    @OneToMany(mappedBy = "programme",cascade = CascadeType.ALL)
     @JsonIgnore
-    private Professeur professeur;
+    private Set<Professeur> professeurs;
 
 
     @ManyToOne

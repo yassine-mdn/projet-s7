@@ -37,12 +37,10 @@ public class Reunion {
     private Integer durreeEnMin;
 
     @ManyToOne
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JoinColumn(name = "id_responssable",nullable = false)
     private ResponssableDeStage responssableDeStage;
 
     @ManyToMany(mappedBy = "reunions")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Set<Etudiant> etudiants;
 
 }

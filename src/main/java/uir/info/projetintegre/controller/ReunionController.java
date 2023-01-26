@@ -1,10 +1,12 @@
 package uir.info.projetintegre.controller;
 
 import org.springframework.web.bind.annotation.*;
+import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.exception.ReunionNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
-import uir.info.projetintegre.model.ResponssableDeStage;
 import uir.info.projetintegre.model.Reunion;
+import uir.info.projetintegre.repository.EtudiantRepository;
+import uir.info.projetintegre.repository.ResponssableDeStageRepository;
 import uir.info.projetintegre.repository.ReunionRepository;
 
 import java.util.ArrayList;
@@ -13,13 +15,17 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/reunion")
+@RequestMapping("/api/v1/reunions")
 public class ReunionController {
 
     private final ReunionRepository reunionRepository;
+    private final EtudiantRepository etudiantRepository;
+    private final ResponssableDeStageRepository responssableDeStageRepository;
 
-    public ReunionController(ReunionRepository reunionRepository) {
+    public ReunionController(ReunionRepository reunionRepository, EtudiantRepository etudiantRepository, ResponssableDeStageRepository responssableDeStageRepository) {
         this.reunionRepository = reunionRepository;
+        this.etudiantRepository = etudiantRepository;
+        this.responssableDeStageRepository = responssableDeStageRepository;
     }
 
     @PostMapping
@@ -29,8 +35,8 @@ public class ReunionController {
         reunion.setTitre(request.titre());
         reunion.setDescription(request.description());
         reunion.setDurreeEnMin(request.durreeEnMin());
-        reunion.setResponssableDeStage(request.responssableDeStage());
-        reunion.setEtudiants(request.etudiants());
+        reunion.setResponssableDeStage( responssableDeStageRepository.findById(request.responsableId).orElseThrow(() -> new CompteNotFoundException(request.responsableId)));
+        reunion.setEtudiants(Set.copyOf( etudiantRepository.findAllById(request.etudiantsId)));
         reunionRepository.save(reunion);
     }
 
@@ -53,7 +59,7 @@ public class ReunionController {
                             reunion.setTitre(request.titre());
                             reunion.setDescription(request.description());
                             reunion.setDurreeEnMin(request.durreeEnMin());
-                            reunion.setEtudiants(request.etudiants());
+                            reunion.setEtudiants(Set.copyOf(etudiantRepository.findAllById(request.etudiantsId)));
                             return reunionRepository.save(reunion);
                         }
                 );
@@ -69,8 +75,8 @@ public class ReunionController {
             String titre,
             String description,
             Integer durreeEnMin,
-            ResponssableDeStage responssableDeStage,
-            Set<Etudiant> etudiants
+            Integer responsableId,
+            List<Integer> etudiantsId
     ) {
     }
 }

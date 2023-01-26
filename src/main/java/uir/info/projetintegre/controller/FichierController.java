@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/fichier")
+@RequestMapping("/api/v1/fichiers")
 public class FichierController {
 
     private final StockageService stockageService;
@@ -33,7 +33,7 @@ public class FichierController {
         this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
-    @PostMapping("/send/src={src_id}/dest={dest_id}")
+    @PostMapping("send/src/{src_id}/dest/{dest_id}")
     public ResponseEntity<?> sendFichier(@PathVariable("src_id") Integer src, @RequestParam("file") MultipartFile fichier, @PathVariable("dest_id") Integer dest) throws IOException {
         JoinTableCompte source = joinTableCompteRepository.findById(src).orElseThrow(() -> new CompteNotFoundException(src));
         JoinTableCompte destination = joinTableCompteRepository.findById(dest).orElseThrow(() -> new CompteNotFoundException(dest));
@@ -41,13 +41,13 @@ public class FichierController {
         return ResponseEntity.status(HttpStatus.OK).body(uploadFichier);
     }
 
-    @GetMapping("/src={src_id}")
+    @GetMapping("src/{src_id}")
     public List<Fichier> getSentFichier(@PathVariable("src_id") Integer src){
         JoinTableCompte source = joinTableCompteRepository.findById(src).orElseThrow(() -> new CompteNotFoundException(src));
         return new ArrayList<>(source.getSent());
     }
 
-    @GetMapping("/dest={dest_id}")
+    @GetMapping("dest/{dest_id}")
     public List<Fichier> getReceivedFichier(@PathVariable("dest_id") Integer dest){
         JoinTableCompte destination = joinTableCompteRepository.findById(dest).orElseThrow(() -> new CompteNotFoundException(dest));
         return new ArrayList<>(destination.getReceived());

@@ -10,7 +10,7 @@ import uir.info.projetintegre.repository.JoinTableCompteRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/v1/admins")
 public class AdminController {
 
     private final AdminRepository adminRepository;
@@ -37,12 +37,12 @@ public class AdminController {
         return adminRepository.findAll();
     }
 
-    @GetMapping("id={admin_id}")
+    @GetMapping("{admin_id}")
     public Admin getAdminById(@PathVariable("admin_id") Integer id){
         return adminRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
     }
 
-    @PutMapping("id={admin_id}")
+    @PutMapping("{admin_id}")
     public void updateAdmin(@PathVariable("admin_id") Integer id, @RequestBody NewAdminRequest request) {
         adminRepository.findById(id)
                 .map(admin -> {
@@ -56,7 +56,7 @@ public class AdminController {
         //TODO:Add case of recieving an invalid id
     }
 
-    @DeleteMapping("id={admin_id}")
+    @DeleteMapping("{admin_id}")
     public void deleteAdmin(@PathVariable("admin_id") Integer id){
 
         adminRepository.deleteById(id);

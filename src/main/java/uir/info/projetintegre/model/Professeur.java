@@ -17,8 +17,8 @@ public class Professeur extends Compte{
     @JsonIgnore
     private Set<Etudiant> etudiants;
 
-    @OneToOne
-    @JoinColumn(name = "id_prog",referencedColumnName = "idProgramme")
+    @ManyToOne
+    @JoinColumn(name = "id_programme",nullable = true)
     private Programme programme;
 
     @OneToOne(mappedBy = "professeur",cascade = CascadeType.ALL)

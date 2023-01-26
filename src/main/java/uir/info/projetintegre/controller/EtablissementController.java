@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/etablissement")
+@RequestMapping("/api/v1/etablissements")
 public class EtablissementController {
 
     private final EtablissementRepository etablissementRepository;
@@ -32,18 +32,18 @@ public class EtablissementController {
         return etablissementRepository.findAll();
     }
 
-    @GetMapping("id={etablissement_id}")
+    @GetMapping("{etablissement_id}")
     public Etablissement getEtablissementById(@PathVariable("etablissement_id") Integer id) {
         return etablissementRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
     }
 
-    @GetMapping("id={etablissement_id}/programme")
+    @GetMapping("{etablissement_id}/programme")
     public List<Programme> getProgrammeByIdEtablissement(@PathVariable("etablissement_id") Integer id) {
         Etablissement etablissement = etablissementRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
         return new ArrayList<>(etablissement.getProgrammes());
     }
 
-    @PutMapping("id={etablissement_id}")
+    @PutMapping("{etablissement_id}")
     public void updateEtablissement(@PathVariable("etablissement_id") Integer id, @RequestBody NewEtablissementRequest request) {
         etablissementRepository.findById(id)
                 .map(etablissement -> {
@@ -53,7 +53,7 @@ public class EtablissementController {
                 );
     }
 
-    @DeleteMapping("id={etablissement_id}")
+    @DeleteMapping("{etablissement_id}")
     public void deleteEtablissement(@PathVariable("etablissement_id") Integer id) {
         etablissementRepository.deleteById(id);
     }
