@@ -1,9 +1,11 @@
-package uir.info.projetintegre.security;
+package uir.info.projetintegre.service;
 
 import lombok.SneakyThrows;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.model.Etudiant;
@@ -22,15 +24,23 @@ public class BatchCreateService {
     public final EtudiantRepository etudiantRepository;
     private static final String[] HEADERS = { "id", "nom", "prenom", "email", "niveauEtude", "programme" };
 
-    public BatchCreateService(JoinTableCompteRepository joinTableCompteRepository, ProgrammeRepository programmeRepository, EtudiantRepository etudiantRepository) {
+    public BatchCreateService(JoinTableCompteRepository joinTableCompteRepository, ProgrammeRepository programmeRepository, EtudiantRepository etudiantRepository, PasswordEncoder encoder) {
         this.joinTableCompteRepository = joinTableCompteRepository;
         this.programmeRepository = programmeRepository;
         this.etudiantRepository = etudiantRepository;
+        this.encoder = encoder;
     }
 
+    final
+    PasswordEncoder encoder;
     @SneakyThrows
     public String createEtudiantFromFile(MultipartFile excel){
         String message = "";
+        PasswordGenerator passwordGenerator = new PasswordGenerator.PasswordGeneratorBuilder()
+                .useDigits(true)
+                .useLower(true)
+                .useUpper(true)
+                .build();
 
         try {
             XSSFWorkbook workbook = new XSSFWorkbook(excel.getInputStream());
@@ -56,6 +66,7 @@ public class BatchCreateService {
                 etudiant.setPrenom(row.getCell(2).getStringCellValue());
                 etudiant.setEmail(row.getCell(3).getStringCellValue());
                 etudiant.setNiveauEtude((int) row.getCell(4).getNumericCellValue());
+                etudiant.setPassWord(encoder.encode(passwordGenerator.generate(8)));
 
                 String programmeName = row.getCell(5).getStringCellValue();
                 Programme programme = programmeRepository.findByNom(programmeName);

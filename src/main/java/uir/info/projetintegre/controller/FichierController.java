@@ -8,10 +8,9 @@ import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.Fichier;
 import uir.info.projetintegre.model.JoinTableCompte;
-import uir.info.projetintegre.model.Professeur;
 import uir.info.projetintegre.repository.FichierRepository;
 import uir.info.projetintegre.repository.JoinTableCompteRepository;
-import uir.info.projetintegre.security.StockageService;
+import uir.info.projetintegre.service.StockageService;
 
 import java.io.IOException;
 import java.util.ArrayList;

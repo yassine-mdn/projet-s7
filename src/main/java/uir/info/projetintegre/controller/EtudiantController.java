@@ -2,13 +2,14 @@ package uir.info.projetintegre.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.exception.ProgrammeNotFoundException;
 import uir.info.projetintegre.model.*;
 import uir.info.projetintegre.repository.*;
-import uir.info.projetintegre.security.BatchCreateService;
+import uir.info.projetintegre.service.BatchCreateService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class EtudiantController {
         this.joinTableCompteRepository = joinTableCompteRepository;
     }
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public void addEtudiant(@RequestBody NewEtudiantRequest request) {
         Etudiant etudiant = new Etudiant();
@@ -51,6 +53,7 @@ public class EtudiantController {
         joinTableCompteRepository.save(JoinTableCompte.builder().etudiant(etudiant).build());
     }
 
+   // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("batch")
     public ResponseEntity<?> batchAddEtudiant(@RequestParam("file") MultipartFile fichier) throws IOException {
         String response = batchCreateService.createEtudiantFromFile(fichier);
@@ -59,6 +62,8 @@ public class EtudiantController {
 
 
     //TODO: USe Pagination to get only 25 items at a time (saving resources) (todo 7itach fiha tamara bezzaf)
+    //chi nhar insha'allah
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Etudiant> getAllEtudiants() {
         return etudiantRepository.findAll();

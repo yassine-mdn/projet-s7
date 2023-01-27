@@ -3,6 +3,7 @@ package uir.info.projetintegre.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import uir.info.projetintegre.model.enums.Roles;
 
 import java.util.Set;
 
@@ -12,6 +13,8 @@ import java.util.Set;
 @Setter
 @Entity
 public class Etudiant extends Compte{
+
+    static final Roles role = Roles.STUDENT;
 
     private Integer niveauEtude;
 

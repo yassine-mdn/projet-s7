@@ -3,6 +3,7 @@ package uir.info.projetintegre.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import uir.info.projetintegre.model.enums.Roles;
 
 import java.util.Set;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @Entity
 public class Professeur extends Compte{
 
+    static final Roles role = Roles.PROF;
     @OneToMany(mappedBy = "professeur")
     @JsonIgnore
     private Set<Etudiant> etudiants;

@@ -30,6 +30,7 @@ public class Compte {
     private Integer idC;
     private String nom;
     private String prenom;
+    @Column(unique = true)
     private String email;
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String passWord;
