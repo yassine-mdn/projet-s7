@@ -28,7 +28,6 @@ public class Etablissement {
 
     private String nom;
 
-    @JsonIgnore
     @OneToMany(mappedBy = "etablissement")
     private Set<Programme> programmes;
 

@@ -3,6 +3,7 @@ package uir.info.projetintegre.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.exception.CompteNotFoundException;
@@ -10,6 +11,7 @@ import uir.info.projetintegre.exception.ProgrammeNotFoundException;
 import uir.info.projetintegre.model.*;
 import uir.info.projetintegre.repository.*;
 import uir.info.projetintegre.service.BatchCreateService;
+import uir.info.projetintegre.service.EmailService;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,34 +28,39 @@ public class EtudiantController {
     private final BatchCreateService batchCreateService;
     private final ResponssableDeStageRepository responssableDeStageRepository;
     private final JoinTableCompteRepository joinTableCompteRepository;
+    private final PasswordEncoder encoder;
+    private final EmailService emailService;
 
 
     public EtudiantController(EtudiantRepository etudiantRepository,
                               ProfesseurRepository professeurRepository,
-                              ProgrammeRepository programmeRepository, BatchCreateService batchCreateService, ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository) {
+                              ProgrammeRepository programmeRepository, BatchCreateService batchCreateService, ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository, PasswordEncoder encoder, EmailService emailService) {
         this.etudiantRepository = etudiantRepository;
         this.professeurRepository = professeurRepository;
         this.programmeRepository = programmeRepository;
         this.batchCreateService = batchCreateService;
         this.responssableDeStageRepository = responssableDeStageRepository;
         this.joinTableCompteRepository = joinTableCompteRepository;
+        this.encoder = encoder;
+        this.emailService = emailService;
     }
 
-    //@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public void addEtudiant(@RequestBody NewEtudiantRequest request) {
         Etudiant etudiant = new Etudiant();
         etudiant.setNom(request.nom());
         etudiant.setPrenom(request.prenom());
         etudiant.setEmail(request.email());
-        etudiant.setPassWord(request.passWord());
+        etudiant.setPassWord(encoder.encode(request.passWord()));
         etudiant.setNiveauEtude(request.niveauEtude());
         etudiant.setProgramme(programmeRepository.findById(request.programmeId).orElseThrow(() -> new ProgrammeNotFoundException(request.programmeId)));
         etudiantRepository.save(etudiant);
         joinTableCompteRepository.save(JoinTableCompte.builder().etudiant(etudiant).build());
+        emailService.sendAccountInfo(request.prenom, request.email, request.passWord);
     }
 
-   // @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("batch")
     public ResponseEntity<?> batchAddEtudiant(@RequestParam("file") MultipartFile fichier) throws IOException {
         String response = batchCreateService.createEtudiantFromFile(fichier);
@@ -73,19 +80,21 @@ public class EtudiantController {
     public Etudiant getEtudiantById(@PathVariable("etudiant_id") Integer id) {
         return etudiantRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     @GetMapping("{etudiant_id}/encadrant")
     public Professeur getProfesseurByIdEtudiant(@PathVariable("etudiant_id") Integer id) {
         Etudiant etudiant = etudiantRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
         return etudiant.getProfesseur();
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     @GetMapping("{etudiant_id}/superviseur")
     public ResponssableDeStage getRDSByIdEtudiant(@PathVariable("etudiant_id") Integer id) {
         Etudiant etudiant = etudiantRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
         return etudiant.getSuperviseur();
     }
 
+    @PreAuthorize("hasRole('STUDENT')")
     @GetMapping("{etudiant_id}/reunion")
     public List<Reunion> getReunionByIdEtudiant(@PathVariable("etudiant_id") Integer id){
         Etudiant etudiant = etudiantRepository.findById(id).orElseThrow(() -> new CompteNotFoundException(id));
@@ -95,6 +104,7 @@ public class EtudiantController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     @PutMapping("{etudiant_id}")
     public void updateEtudiant(@PathVariable("etudiant_id") Integer id, @RequestBody NewEtudiantRequest request) {
         etudiantRepository.findById(id)
@@ -114,6 +124,7 @@ public class EtudiantController {
     }
 
     //nssa ghir kount 7mar
+    @PreAuthorize("hasAnyRole('ADMIN','PROF')")
     @PutMapping("{etudiant_id}/encadrant/{encadrant_id}")
     public void setEtudiantEncadrant(@PathVariable("etudiant_id") Integer idEtudiant, @PathVariable("encadrant_id") Integer idEncadrant) {
 
@@ -126,6 +137,7 @@ public class EtudiantController {
                 );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{etudiant_id}/superviseur/{superviseur_id}")
     public void setEtudiantSuperviseur(@PathVariable("etudiant_id") Integer id, @PathVariable("superviseur_id") Integer idSuperviseur) {
 
@@ -138,6 +150,7 @@ public class EtudiantController {
                 );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{etudiant_id}")
     public void deleteEtudiant(@PathVariable("etudiant_id") Integer id) {
         etudiantRepository.deleteById(id);

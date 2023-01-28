@@ -1,5 +1,6 @@
 package uir.info.projetintegre.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.exception.ReunionNotFoundException;
@@ -28,6 +29,7 @@ public class ReunionController {
         this.responssableDeStageRepository = responssableDeStageRepository;
     }
 
+    @PreAuthorize("hasAnyRole('PROF','RDS')")
     @PostMapping
     public void addReunion(@RequestBody NewReunionRequest request) {
         Reunion reunion = new Reunion();
@@ -40,17 +42,19 @@ public class ReunionController {
         reunionRepository.save(reunion);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','RDS','STUDENT')")
     @GetMapping("id={reunion_id}")
     public Reunion getReunionById(@PathVariable("reunion_id") Integer id) {
         return reunionRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','RDS')")
     @GetMapping("id={reunion_id}/etudiant")
     public List<Etudiant> getEtudiantByIdReunion(@PathVariable("reunion_id") Integer id) {
         Reunion reunion = reunionRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
         return new ArrayList<>(reunion.getEtudiants());
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','RDS')")
     @PutMapping("id={reunion_id}")
     public void updateReunion(@PathVariable("reunion_id") Integer id, @RequestBody NewReunionRequest request) {
         reunionRepository.findById(id)
@@ -64,7 +68,7 @@ public class ReunionController {
                         }
                 );
     }
-
+    @PreAuthorize("hasAnyRole('ADMIN','RDS')")
     @DeleteMapping("id={reunion_id}")
     public void deleteReunion(@PathVariable("reunion_id") Integer id){
         reunionRepository.deleteById(id);

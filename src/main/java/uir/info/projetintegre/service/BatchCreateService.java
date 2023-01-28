@@ -19,9 +19,10 @@ import java.io.IOException;
 @Service
 public class BatchCreateService {
 
-    public final JoinTableCompteRepository joinTableCompteRepository;
-    public final ProgrammeRepository programmeRepository;
-    public final EtudiantRepository etudiantRepository;
+    private final JoinTableCompteRepository joinTableCompteRepository;
+    private final ProgrammeRepository programmeRepository;
+    private final EtudiantRepository etudiantRepository;
+    private final PasswordEncoder encoder;
     private static final String[] HEADERS = { "id", "nom", "prenom", "email", "niveauEtude", "programme" };
 
     public BatchCreateService(JoinTableCompteRepository joinTableCompteRepository, ProgrammeRepository programmeRepository, EtudiantRepository etudiantRepository, PasswordEncoder encoder) {
@@ -31,8 +32,7 @@ public class BatchCreateService {
         this.encoder = encoder;
     }
 
-    final
-    PasswordEncoder encoder;
+
     @SneakyThrows
     public String createEtudiantFromFile(MultipartFile excel){
         String message = "";
@@ -66,7 +66,8 @@ public class BatchCreateService {
                 etudiant.setPrenom(row.getCell(2).getStringCellValue());
                 etudiant.setEmail(row.getCell(3).getStringCellValue());
                 etudiant.setNiveauEtude((int) row.getCell(4).getNumericCellValue());
-                etudiant.setPassWord(encoder.encode(passwordGenerator.generate(8)));
+                String passWord =passwordGenerator.generate(8);
+                etudiant.setPassWord(encoder.encode(passWord));
 
                 String programmeName = row.getCell(5).getStringCellValue();
                 Programme programme = programmeRepository.findByNom(programmeName);

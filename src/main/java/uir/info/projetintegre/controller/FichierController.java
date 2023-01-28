@@ -21,6 +21,8 @@ import java.util.List;
 @RequestMapping("/api/v1/fichiers")
 public class FichierController {
 
+    //Kamel security flaw but who cares
+
     private final StockageService stockageService;
     private final FichierRepository fichierRepository;
     private final JoinTableCompteRepository joinTableCompteRepository;

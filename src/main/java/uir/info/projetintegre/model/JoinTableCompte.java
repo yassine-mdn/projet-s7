@@ -26,19 +26,19 @@ public class JoinTableCompte {
     )
     private Integer id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "admin_id", referencedColumnName = "idc")
     private Admin admin;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "prof_id", referencedColumnName = "idc")
     private Professeur professeur;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "etudiant_id", referencedColumnName = "idc")
     private Etudiant etudiant;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne
     @JoinColumn(name = "rsd_id", referencedColumnName = "idc")
     private ResponssableDeStage rsd;
 

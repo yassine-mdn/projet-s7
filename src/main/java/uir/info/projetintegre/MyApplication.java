@@ -1,6 +1,6 @@
 package uir.info.projetintegre;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.catalina.Store;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.filter.CorsFilter;
@@ -11,9 +11,9 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import uir.info.projetintegre.model.*;
 import uir.info.projetintegre.repository.*;
+import uir.info.projetintegre.service.EmailService;
 
 import java.util.Arrays;
-import java.util.Set;
 
 @SpringBootApplication
 public class MyApplication{
@@ -22,8 +22,10 @@ public class MyApplication{
         SpringApplication.run(MyApplication.class, args);
     }
 
+
+
     @Bean
-    CommandLineRunner commandLineRunner(AdminRepository adminRepository, ResponssableDeStageRepository responssableDeStageRepository, PasswordEncoder encoder){
+    CommandLineRunner commandLineRunner(AdminRepository adminRepository, ResponssableDeStageRepository responssableDeStageRepository, PasswordEncoder encoder, JoinTableCompteRepository joinTableCompteRepository){
 
         return args -> {
             Admin admin = new Admin();
@@ -32,10 +34,12 @@ public class MyApplication{
             admin.setEmail("yassinemouddene@gmail.com");
             admin.setPassWord(encoder.encode("yassine"));
             adminRepository.save(admin);
+            joinTableCompteRepository.save(JoinTableCompte.builder().admin(admin).build());
             ResponssableDeStage rds = new ResponssableDeStage();
             rds.setEmail("test@gmail.com");
             rds.setPassWord(encoder.encode("test"));
             responssableDeStageRepository.save(rds);
+            joinTableCompteRepository.save(JoinTableCompte.builder().rsd(rds).build());
         };
     }
 

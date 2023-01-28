@@ -20,6 +20,7 @@ import java.util.List;
 public class CompteService implements UserDetailsService {
 
     private final AdminRepository adminRepository;
+
     private final ResponssableDeStageRepository responssableDeStageRepository;
     private final ProfesseurRepository professeurRepository;
     private  final EtudiantRepository etudiantRepository;

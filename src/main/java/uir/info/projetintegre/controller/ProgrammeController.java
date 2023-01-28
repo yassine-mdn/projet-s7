@@ -1,5 +1,6 @@
 package uir.info.projetintegre.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.ReunionNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
@@ -22,6 +23,7 @@ public class ProgrammeController {
         this.etablissementRepository = etablissementRepository;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public void addProgramme(@RequestBody NewProgrammeRequest request) {
         Programme programme = new Programme();
@@ -31,6 +33,7 @@ public class ProgrammeController {
         programmeRepository.save(programme);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public List<Programme> getAllProgrammes(){return programmeRepository.findAll();}
 
@@ -39,12 +42,14 @@ public class ProgrammeController {
         return programmeRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("{programme_id}/etudiant")
     public List<Etudiant> getEtudiantsByIdProgramme(@PathVariable("programme_id") Integer id) {
         Programme programme = programmeRepository.findById(id).orElseThrow(() -> new ReunionNotFoundException(id));
         return new ArrayList<>(programme.getEtudiants());
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("{programme_id}")
     public void updateProgramme(@PathVariable("programme_id") Integer id, @RequestBody NewProgrammeRequest request) {
         programmeRepository.findById(id)
@@ -56,6 +61,7 @@ public class ProgrammeController {
                 );
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("{programme_id}")
     public void deleteProgramme(@PathVariable("programme_id") Integer id){
         programmeRepository.deleteById(id);
