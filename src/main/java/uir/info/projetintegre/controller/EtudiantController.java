@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.exception.ProgrammeNotFoundException;
 import uir.info.projetintegre.model.*;
+import uir.info.projetintegre.model.enums.Roles;
 import uir.info.projetintegre.repository.*;
 import uir.info.projetintegre.service.BatchCreateService;
 import uir.info.projetintegre.service.EmailService;
@@ -27,20 +28,23 @@ public class EtudiantController {
     private final ProgrammeRepository programmeRepository;
     private final BatchCreateService batchCreateService;
     private final ResponssableDeStageRepository responssableDeStageRepository;
-    private final JoinTableCompteRepository joinTableCompteRepository;
     private final PasswordEncoder encoder;
     private final EmailService emailService;
 
 
     public EtudiantController(EtudiantRepository etudiantRepository,
                               ProfesseurRepository professeurRepository,
-                              ProgrammeRepository programmeRepository, BatchCreateService batchCreateService, ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository, PasswordEncoder encoder, EmailService emailService) {
+                              ProgrammeRepository programmeRepository,
+                              BatchCreateService batchCreateService,
+                              ResponssableDeStageRepository responssableDeStageRepository,
+                              PasswordEncoder encoder,
+                              EmailService emailService) {
         this.etudiantRepository = etudiantRepository;
         this.professeurRepository = professeurRepository;
         this.programmeRepository = programmeRepository;
         this.batchCreateService = batchCreateService;
         this.responssableDeStageRepository = responssableDeStageRepository;
-        this.joinTableCompteRepository = joinTableCompteRepository;
+
         this.encoder = encoder;
         this.emailService = emailService;
     }
@@ -54,9 +58,9 @@ public class EtudiantController {
         etudiant.setEmail(request.email());
         etudiant.setPassWord(encoder.encode(request.passWord()));
         etudiant.setNiveauEtude(request.niveauEtude());
+        etudiant.setRole(Roles.STUDENT);
         etudiant.setProgramme(programmeRepository.findById(request.programmeId).orElseThrow(() -> new ProgrammeNotFoundException(request.programmeId)));
         etudiantRepository.save(etudiant);
-        joinTableCompteRepository.save(JoinTableCompte.builder().etudiant(etudiant).build());
         emailService.sendAccountInfo(request.prenom, request.email, request.passWord);
     }
 

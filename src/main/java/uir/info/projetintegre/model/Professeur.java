@@ -13,8 +13,6 @@ import java.util.Set;
 @Setter
 @Entity
 public class Professeur extends Compte{
-
-    static final Roles role = Roles.PROF;
     @OneToMany(mappedBy = "professeur")
     @JsonIgnore
     private Set<Etudiant> etudiants;
@@ -23,8 +21,6 @@ public class Professeur extends Compte{
     @JoinColumn(name = "id_programme",nullable = true)
     private Programme programme;
 
-    @OneToOne(mappedBy = "professeur",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private JoinTableCompte joinTableCompte;
+
 
 }

@@ -13,9 +13,6 @@ import java.util.Set;
 @Setter
 @Entity
 public class ResponssableDeStage extends Compte{
-
-    static final Roles role = Roles.RDS;
-
     @OneToMany(mappedBy = "responssableDeStage")
     @JsonIgnore
     private Set<Reunion> reunions;
@@ -23,9 +20,5 @@ public class ResponssableDeStage extends Compte{
     @OneToMany(mappedBy = "superviseur")
     @JsonIgnore
     private Set<Etudiant> etudiantsSuperviser;
-
-    @OneToOne(mappedBy = "rsd")
-    @JsonIgnore
-    private JoinTableCompte joinTableCompte;
 
 }

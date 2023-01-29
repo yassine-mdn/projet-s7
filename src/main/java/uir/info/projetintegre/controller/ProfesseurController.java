@@ -6,9 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.exception.ProgrammeNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
-import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.model.Professeur;
-import uir.info.projetintegre.repository.JoinTableCompteRepository;
+import uir.info.projetintegre.model.enums.Roles;
 import uir.info.projetintegre.repository.ProfesseurRepository;
 import uir.info.projetintegre.repository.ProgrammeRepository;
 import uir.info.projetintegre.service.EmailService;
@@ -22,15 +21,13 @@ import java.util.Set;
 public class ProfesseurController {
 
     private final ProfesseurRepository professeurRepository;
-    private final JoinTableCompteRepository joinTableCompteRepository;
     private final ProgrammeRepository programmeRepository;
     private final PasswordEncoder encoder;
     private final EmailService emailService;
 
 
-    public ProfesseurController(ProfesseurRepository professeurRepository, JoinTableCompteRepository joinTableCompteRepository, ProgrammeRepository programmeRepository, PasswordEncoder encoder, EmailService emailService) {
+    public ProfesseurController(ProfesseurRepository professeurRepository, ProgrammeRepository programmeRepository, PasswordEncoder encoder, EmailService emailService) {
         this.professeurRepository = professeurRepository;
-        this.joinTableCompteRepository = joinTableCompteRepository;
         this.programmeRepository = programmeRepository;
         this.encoder = encoder;
         this.emailService = emailService;
@@ -45,10 +42,10 @@ public class ProfesseurController {
         professeur.setPrenom(request.prenom());
         professeur.setEmail(request.email());
         professeur.setPassWord(encoder.encode(request.passWord()));
+        professeur.setRole(Roles.PROF);
         professeur.setProgramme(programmeRepository.findById(request.programmeId).orElseThrow(() -> new ProgrammeNotFoundException(request.programmeId)));
         professeur.setEtudiants(request.etudiants());
         professeurRepository.save(professeur);
-        joinTableCompteRepository.save(JoinTableCompte.builder().professeur(professeur).build());
         emailService.sendAccountInfo(request.prenom, request.email, request.passWord);
     }
 

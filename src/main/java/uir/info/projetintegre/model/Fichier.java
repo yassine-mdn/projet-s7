@@ -35,11 +35,11 @@ public class Fichier {
 
     @ManyToOne
     @JoinColumn(name = "sender_id",nullable = false)
-    private JoinTableCompte sender;
+    private Compte sender;
 
     @ManyToOne
     @JoinColumn(name = "receiver_id",nullable = false)
-    private JoinTableCompte receiver;
+    private Compte receiver;
 
     //TODO: Link each file to the uploader via the "compte" entity
 

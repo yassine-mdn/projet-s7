@@ -5,10 +5,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import uir.info.projetintegre.exception.CompteNotFoundException;
 import uir.info.projetintegre.model.Etudiant;
-import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.model.ResponssableDeStage;
 import uir.info.projetintegre.model.Reunion;
-import uir.info.projetintegre.repository.JoinTableCompteRepository;
+import uir.info.projetintegre.model.enums.Roles;
 import uir.info.projetintegre.repository.ResponssableDeStageRepository;
 import uir.info.projetintegre.service.EmailService;
 
@@ -21,13 +20,11 @@ import java.util.List;
 public class RespossableDeStageController {
 
     private final ResponssableDeStageRepository responssableDeStageRepository;
-    private final JoinTableCompteRepository joinTableCompteRepository;
     private final PasswordEncoder encoder;
     private final EmailService emailService;
 
-    public RespossableDeStageController(ResponssableDeStageRepository responssableDeStageRepository, JoinTableCompteRepository joinTableCompteRepository, PasswordEncoder encoder, EmailService emailService) {
+    public RespossableDeStageController(ResponssableDeStageRepository responssableDeStageRepository, PasswordEncoder encoder, EmailService emailService) {
         this.responssableDeStageRepository = responssableDeStageRepository;
-        this.joinTableCompteRepository = joinTableCompteRepository;
         this.encoder = encoder;
         this.emailService = emailService;
     }
@@ -40,8 +37,8 @@ public class RespossableDeStageController {
         responssableDeStage.setPrenom(request.prenom());
         responssableDeStage.setEmail(request.email());
         responssableDeStage.setPassWord(encoder.encode(request.passWord()));
+        responssableDeStage.setRole(Roles.RDS);
         responssableDeStageRepository.save(responssableDeStage);
-        joinTableCompteRepository.save(JoinTableCompte.builder().rsd(responssableDeStage).build());
         emailService.sendAccountInfo(request.prenom, request.email, request.passWord);
     }
 

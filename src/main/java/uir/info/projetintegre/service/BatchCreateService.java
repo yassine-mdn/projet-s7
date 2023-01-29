@@ -4,29 +4,25 @@ import lombok.SneakyThrows;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uir.info.projetintegre.model.Etudiant;
-import uir.info.projetintegre.model.JoinTableCompte;
 import uir.info.projetintegre.model.Programme;
+import uir.info.projetintegre.model.enums.Roles;
 import uir.info.projetintegre.repository.EtudiantRepository;
-import uir.info.projetintegre.repository.JoinTableCompteRepository;
 import uir.info.projetintegre.repository.ProgrammeRepository;
 
 import java.io.IOException;
 @Service
 public class BatchCreateService {
 
-    private final JoinTableCompteRepository joinTableCompteRepository;
     private final ProgrammeRepository programmeRepository;
     private final EtudiantRepository etudiantRepository;
     private final PasswordEncoder encoder;
     private static final String[] HEADERS = { "id", "nom", "prenom", "email", "niveauEtude", "programme" };
 
-    public BatchCreateService(JoinTableCompteRepository joinTableCompteRepository, ProgrammeRepository programmeRepository, EtudiantRepository etudiantRepository, PasswordEncoder encoder) {
-        this.joinTableCompteRepository = joinTableCompteRepository;
+    public BatchCreateService( ProgrammeRepository programmeRepository, EtudiantRepository etudiantRepository, PasswordEncoder encoder) {
         this.programmeRepository = programmeRepository;
         this.etudiantRepository = etudiantRepository;
         this.encoder = encoder;
@@ -76,8 +72,8 @@ public class BatchCreateService {
                     return "Wrong \"Programme\" name";
                 }
                 etudiant.setProgramme(programme);
+                etudiant.setRole(Roles.STUDENT);
                 etudiantRepository.save(etudiant);
-                joinTableCompteRepository.save(JoinTableCompte.builder().etudiant(etudiant).build());
             }
             workbook.close();
             return "Excel file successfully imported";

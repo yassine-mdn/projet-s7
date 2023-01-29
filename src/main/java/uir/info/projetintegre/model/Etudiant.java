@@ -14,8 +14,6 @@ import java.util.Set;
 @Entity
 public class Etudiant extends Compte{
 
-    static final Roles role = Roles.STUDENT;
-
     private Integer niveauEtude;
 
     @ManyToMany
@@ -40,9 +38,6 @@ public class Etudiant extends Compte{
     @JoinColumn(name = "id_superviseur")
     private ResponssableDeStage superviseur;
 
-    @OneToOne(mappedBy = "etudiant",cascade = CascadeType.ALL)
-    @JsonIgnore
-    private JoinTableCompte joinTableCompte;
 
     //TODO: Nzid l blan mta3 date debut stage & durrée
 }
